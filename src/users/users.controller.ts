@@ -1,11 +1,25 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  DefaultValuePipe,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+} from "@nestjs/common";
 
 @Controller("users")
 export class UsersController {
-  @Get(":id")
-  public getUsers(@Param("id") id: string, @Query() query: any) {
+  @Get(":id?")
+  public getUsers(
+    @Param("id", ParseIntPipe) id: number | undefined,
+    @Query("limit", new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query("page", new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     console.log(id);
-    console.log(query);
+    console.log(limit);
+    console.log(page);
     return "getUsers";
   }
 
