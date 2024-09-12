@@ -23,7 +23,7 @@ export class UsersController {
   }
 
   @Post()
-  public createUser(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+  public createUser(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
     return "createUser";
   }
