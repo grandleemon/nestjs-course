@@ -16,4 +16,12 @@ export class UsersService {
       },
     ];
   }
+
+  public findIneById(id: number) {
+    return {
+      id: 2,
+      firstName: "Test2",
+      email: "test@test.com",
+    };
+  }
 }
