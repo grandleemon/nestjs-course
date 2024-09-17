@@ -11,12 +11,10 @@ import {
   IsUrl,
   Matches,
   MinLength,
+  ValidateNested,
 } from "class-validator";
-
-interface MetaOption {
-  key: string;
-  value: string;
-}
+import { CreatePostMetaOptionsDto } from "./create-post-meta-options.dto";
+import { Type } from "class-transformer";
 
 export class CreatePostDto {
   @IsString()
@@ -67,5 +65,9 @@ export class CreatePostDto {
   })
   tags?: string[];
 
-  metaOptions: MetaOption[];
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePostMetaOptionsDto)
+  metaOptions?: CreatePostMetaOptionsDto[];
 }
