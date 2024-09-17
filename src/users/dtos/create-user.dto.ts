@@ -24,6 +24,7 @@ export class CreateUserDto {
   @IsString()
   @IsEmail()
   @IsNotEmpty()
+  @MaxLength(96)
   email: string;
 
   @IsString()
@@ -33,5 +34,6 @@ export class CreateUserDto {
     message:
       "Password should contain at least 8 characters, one number and one special character",
   })
+  @MaxLength(96)
   password: string;
 }
