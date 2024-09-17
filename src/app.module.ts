@@ -6,6 +6,8 @@ import { PostsModule } from "./posts/posts.module";
 import { AuthModule } from "./auth/auth.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "./users/user.entity";
+import { TagsModule } from "./tags/tags.module";
+import { Tag } from "./tags/tag.entity";
 
 @Module({
   imports: [
@@ -19,13 +21,14 @@ import { User } from "./users/user.entity";
         username: "postgres",
         password: "postgres",
         database: "nestjs-blog",
-        entities: [User],
+        entities: [User, Tag],
         synchronize: true,
       }),
     }),
     UsersModule,
     PostsModule,
     AuthModule,
+    TagsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
