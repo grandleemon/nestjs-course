@@ -11,7 +11,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class CreateTagDto {
-  @ApiProperty
+  @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MinLength(3)
