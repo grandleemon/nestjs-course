@@ -41,7 +41,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
-    console.log(this.configService.get("TEST_ENV"));
+    console.log(this.configService.get("TEST_DEV_ENV"));
     return [
       { firstName: "Test1", email: "test@test.com" },
       {

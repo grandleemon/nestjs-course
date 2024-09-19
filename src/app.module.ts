@@ -1,4 +1,3 @@
-import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { UsersModule } from "./users/users.module";
@@ -8,11 +7,16 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { TagsModule } from "./tags/tags.module";
 import { MetaOptionsModule } from "./meta-options/meta-options.module";
 import { ConfigModule } from "@nestjs/config";
+import * as process from "process";
+import { Module } from "@nestjs/common";
+
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: !ENV ? ".env" : `.env.${ENV}`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [],
