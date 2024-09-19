@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Post } from "../posts/post.entity";
 
 @Entity("meta_options")
 export class MetaOption {
@@ -22,4 +24,7 @@ export class MetaOption {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne(() => Post, (post) => post.metaOptions)
+  post: Post;
 }
