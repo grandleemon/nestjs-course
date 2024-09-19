@@ -13,21 +13,8 @@ export class PostsService {
     private readonly postsRepository: Repository<Post>,
   ) {}
 
-  public findAll(userId: string) {
-    const user = this.usersService.findOneById(userId);
-
-    return [
-      {
-        user,
-        title: "Title1",
-        content: "Content2",
-      },
-      {
-        user,
-        title: "Title1",
-        content: "Content2",
-      },
-    ];
+  public async findAll(userId: string) {
+    return await this.postsRepository.find();
   }
 
   public async create(createPostDto: CreatePostDto) {
