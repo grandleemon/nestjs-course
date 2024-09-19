@@ -18,7 +18,14 @@ export class PostsService {
   }
 
   public async create(createPostDto: CreatePostDto) {
+    const user = await this.usersService.findOneById(createPostDto.authorId);
     const post = this.postsRepository.create(createPostDto);
+
+    if (user) {
+      post.author = user;
+    } else {
+      return `User with id ${createPostDto.authorId} does not exist`;
+    }
 
     return await this.postsRepository.save(post);
   }
