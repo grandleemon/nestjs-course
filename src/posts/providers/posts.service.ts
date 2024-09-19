@@ -4,11 +4,13 @@ import { CreatePostDto } from "../dtos/create-post.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Post } from "../post.entity";
+import { TagsService } from "../../tags/providers/tags.service";
 
 @Injectable()
 export class PostsService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly tagsService: TagsService,
     @InjectRepository(Post)
     private readonly postsRepository: Repository<Post>,
   ) {}
@@ -24,13 +26,13 @@ export class PostsService {
 
   public async create(createPostDto: CreatePostDto) {
     const user = await this.usersService.findOneById(createPostDto.authorId);
-    const post = this.postsRepository.create(createPostDto);
+    const tags = await this.tagsService.getMultipleTagsById(createPostDto.tags);
 
-    if (user) {
-      post.author = user;
-    } else {
-      return `User with id ${createPostDto.authorId} does not exist`;
-    }
+    const post = this.postsRepository.create({
+      ...createPostDto,
+      author: user,
+      tags,
+    });
 
     return await this.postsRepository.save(post);
   }

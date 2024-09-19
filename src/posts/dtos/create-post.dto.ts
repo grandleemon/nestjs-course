@@ -92,18 +92,15 @@ export class CreatePostDto {
   publishOn?: Date;
 
   @ApiPropertyOptional({
-    description: "Array of tags passed as array of string values",
-    example: ["tag1", "tag2"],
+    description: "Array of IDs of tags",
+    example: [1, 2],
   })
   @IsOptional()
   @IsArray()
-  @IsString({
+  @IsInt({
     each: true,
   })
-  @MinLength(3, {
-    each: true,
-  })
-  tags?: string[];
+  tags?: number[];
 
   @ApiPropertyOptional({
     type: "object",
