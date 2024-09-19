@@ -24,4 +24,13 @@ export class TagsService {
 
     return await this.tagsRepository.save(tag);
   }
+
+  public async delete(tagId: number) {
+    await this.tagsRepository.delete(tagId);
+
+    return {
+      deleted: true,
+      id: tagId,
+    };
+  }
 }
