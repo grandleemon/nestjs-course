@@ -1,7 +1,14 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { POST_TYPE } from "./enums/postType.enum";
 import { POST_STATUS } from "./enums/postStatus.enum";
 import { MetaOption } from "../meta-options/meta-option.entity";
+import { User } from "../users/user.entity";
 
 @Entity({
   name: "posts",
@@ -73,4 +80,7 @@ export class Post {
     eager: true,
   })
   metaOptions?: MetaOption;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
 }
