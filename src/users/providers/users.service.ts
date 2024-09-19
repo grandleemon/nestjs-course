@@ -4,6 +4,7 @@ import { Repository } from "typeorm";
 import { User } from "../user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "../dtos/create-user.dto";
+import { ConfigService } from "@nestjs/config";
 
 /**
  * Class to connect to Users table and perform business operations
@@ -15,7 +16,8 @@ export class UsersService {
    */
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -24,7 +26,6 @@ export class UsersService {
         email: createUserDto.email,
       },
     });
-
     if (existingUser) return;
 
     const newUser = this.usersRepository.create(createUserDto);
@@ -40,6 +41,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
+    console.log(this.configService.get("TEST_ENV"));
     return [
       { firstName: "Test1", email: "test@test.com" },
       {
