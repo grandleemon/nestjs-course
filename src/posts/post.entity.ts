@@ -77,7 +77,6 @@ export class Post {
 
   @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
     cascade: true,
-    eager: true,
   })
   metaOptions?: MetaOption;
 

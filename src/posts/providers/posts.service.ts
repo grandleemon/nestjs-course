@@ -14,7 +14,12 @@ export class PostsService {
   ) {}
 
   public async findAll(userId: string) {
-    return await this.postsRepository.find();
+    return await this.postsRepository.find({
+      relations: {
+        metaOptions: true,
+        author: true,
+      },
+    });
   }
 
   public async create(createPostDto: CreatePostDto) {
