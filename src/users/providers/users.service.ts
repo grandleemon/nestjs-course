@@ -36,7 +36,6 @@ export class UsersService {
           email: createUserDto.email,
         },
       });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       throw new RequestTimeoutException(
         "Unable to process your request at the moment please try later",
@@ -49,9 +48,18 @@ export class UsersService {
         "The user already exists, please check your email",
       );
 
-    const newUser = this.usersRepository.create(createUserDto);
+    let newUser = this.usersRepository.create(createUserDto);
 
-    return await this.usersRepository.save(newUser);
+    try {
+      newUser = await this.usersRepository.save(newUser);
+    } catch (e) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment please try later",
+        { description: "Error connecting to the database" },
+      );
+    }
+
+    return newUser;
   }
 
   /**
@@ -76,8 +84,23 @@ export class UsersService {
    * The method to get one specific user by ID from the database
    */
   public async findOneById(id: number) {
-    return await this.usersRepository.findOneBy({
-      id,
-    });
+    let user = undefined;
+
+    try {
+      user = await this.usersRepository.findOneBy({
+        id,
+      });
+    } catch (e) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment please try later",
+        { description: "Error connecting to the database" },
+      );
+    }
+
+    if (!user) {
+      throw new BadRequestException(`The user does not exist`);
+    }
+
+    return user;
   }
 }
