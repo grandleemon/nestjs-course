@@ -9,7 +9,8 @@ import { MetaOptionsModule } from "./meta-options/meta-options.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import * as process from "process";
 import { Module } from "@nestjs/common";
-import { appConfig } from "./config/app.config";
+import appConfig from "./config/app.config";
+import databaseConfig from "./config/database.config";
 
 const ENV = process.env.NODE_ENV;
 
@@ -18,7 +19,7 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: !ENV ? ".env" : `.env.${ENV}`,
-      load: [appConfig],
+      load: [appConfig, databaseConfig],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
