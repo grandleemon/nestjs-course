@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { GetUsersParamDto } from "../dtos/get-users-param.dto";
 import { Repository } from "typeorm";
 import { User } from "../user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "../dtos/create-user.dto";
-import { ConfigService } from "@nestjs/config";
+import { ConfigType } from "@nestjs/config";
+import profileConfig from "../config/profile.config";
 
 /**
  * Class to connect to Users table and perform business operations
@@ -17,7 +18,8 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    private readonly configService: ConfigService,
+    @Inject(profileConfig.KEY)
+    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -41,7 +43,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
-    console.log(this.configService.get("TEST_DEV_ENV"));
+    console.log(this.profileConfiguration);
     return [
       { firstName: "Test1", email: "test@test.com" },
       {
