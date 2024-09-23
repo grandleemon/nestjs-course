@@ -7,7 +7,7 @@ import {
   RequestTimeoutException,
 } from "@nestjs/common";
 import { GetUsersParamDto } from "../dtos/get-users-param.dto";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { User } from "../user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CreateUserDto } from "../dtos/create-user.dto";
@@ -27,42 +27,8 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+    private readonly dataSource: DataSource,
   ) {}
-
-  public async createUser(createUserDto: CreateUserDto) {
-    let existingUser = undefined;
-
-    try {
-      existingUser = await this.usersRepository.findOne({
-        where: {
-          email: createUserDto.email,
-        },
-      });
-    } catch (e) {
-      throw new RequestTimeoutException(
-        "Unable to process your request at the moment please try later",
-        { description: "Error connecting to the database" },
-      );
-    }
-
-    if (existingUser)
-      throw new BadRequestException(
-        "The user already exists, please check your email",
-      );
-
-    let newUser = this.usersRepository.create(createUserDto);
-
-    try {
-      newUser = await this.usersRepository.save(newUser);
-    } catch (e) {
-      throw new RequestTimeoutException(
-        "Unable to process your request at the moment please try later",
-        { description: "Error connecting to the database" },
-      );
-    }
-
-    return newUser;
-  }
 
   /**
    * The method to get all users from the database
@@ -103,5 +69,62 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  public async createUser(createUserDto: CreateUserDto) {
+    let existingUser = undefined;
+
+    try {
+      existingUser = await this.usersRepository.findOne({
+        where: {
+          email: createUserDto.email,
+        },
+      });
+    } catch (e) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment please try later",
+        { description: "Error connecting to the database" },
+      );
+    }
+
+    if (existingUser)
+      throw new BadRequestException(
+        "The user already exists, please check your email",
+      );
+
+    let newUser = this.usersRepository.create(createUserDto);
+
+    try {
+      newUser = await this.usersRepository.save(newUser);
+    } catch (e) {
+      throw new RequestTimeoutException(
+        "Unable to process your request at the moment please try later",
+        { description: "Error connecting to the database" },
+      );
+    }
+
+    return newUser;
+  }
+
+  public async createMany(createUserDto: CreateUserDto[]) {
+    const newUsers: User[] = [];
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      for (const user of createUserDto) {
+        const newUser = queryRunner.manager.create(User, user);
+        const result = await queryRunner.manager.save(newUser);
+        newUsers.push(result);
+      }
+
+      await queryRunner.commitTransaction();
+    } catch (e) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
