@@ -1,5 +1,7 @@
 import {
   BadRequestException,
+  HttpException,
+  HttpStatus,
   Inject,
   Injectable,
   RequestTimeoutException,
@@ -70,14 +72,13 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
-    console.log(this.profileConfiguration);
-    return [
-      { firstName: "Test1", email: "test@test.com" },
+    throw new HttpException(
       {
-        firstName: "Test2",
-        email: "test@test.com",
+        status: HttpStatus.MOVED_PERMANENTLY,
+        error: "The API endpoint does not exist",
       },
-    ];
+      HttpStatus.MOVED_PERMANENTLY,
+    );
   }
 
   /**
