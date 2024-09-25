@@ -35,17 +35,17 @@ export class PaginationProvider {
     return {
       data: results,
       links: {
-        current: "",
-        first: "",
-        last: "",
-        next: "",
-        previous: "",
+        current: `${newUrl.origin}${newUrl.pathname}?limit=${limit}&page=${page}`,
+        first: `${newUrl.origin}${newUrl.pathname}?limit=${limit}&page=1`,
+        last: `${newUrl.origin}${newUrl.pathname}?limit=${limit}&page=${totalPages}`,
+        next: `${newUrl.origin}${newUrl.pathname}?limit=${limit}&page=${nextPage}`,
+        previous: `${newUrl.origin}${newUrl.pathname}?limit=${limit}&page=${previousPage}`,
       },
       meta: {
         currentPage: page,
         itemsPerPage: limit,
-        totalItems: 1,
-        totalPages: 1,
+        totalItems,
+        totalPages,
       },
     };
   }

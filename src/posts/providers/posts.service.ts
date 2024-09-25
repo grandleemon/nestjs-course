@@ -12,6 +12,7 @@ import { TagsService } from "../../tags/providers/tags.service";
 import { PatchPostDto } from "../dtos/patch-post.dto";
 import { GetPostsDto } from "../dtos/get-posts.dto";
 import { PaginationProvider } from "../../common/pagination/providers/pagination.provider";
+import { Paginated } from "../../common/pagination/interfaces/paginated.interface";
 
 @Injectable()
 export class PostsService {
@@ -23,7 +24,10 @@ export class PostsService {
     private readonly paginationProvider: PaginationProvider,
   ) {}
 
-  public async findAll(userId: string, postQuery: GetPostsDto) {
+  public async findAll(
+    userId: string,
+    postQuery: GetPostsDto,
+  ): Promise<Paginated<Post>> {
     const { limit, page } = postQuery;
 
     return await this.paginationProvider.paginateQuery(
